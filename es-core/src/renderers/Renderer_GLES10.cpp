@@ -309,6 +309,118 @@ namespace Renderer
 				go2_input_battery_read(input, &batteryState);
 
 				int batteryIndex;
+				if (batteryState.level == 1)
+				{
+					batteryIndex = 0;
+				}
+				else if (batteryState.level <= 5)
+				{
+					batteryIndex = 1;
+				}
+				else if (batteryState.level <= 10)
+				{
+					batteryIndex = 2;
+				}
+				else if (batteryState.level <= 15)
+				{
+					batteryIndex = 3;
+				}
+				else if (batteryState.level <= 20)
+				{
+					batteryIndex = 4;
+				}
+				else if (batteryState.level <= 25)
+				{
+					batteryIndex = 5;
+				}
+				else if (batteryState.level <= 30)
+				{
+					batteryIndex = 6;
+				}
+				else if (batteryState.level <= 35)
+				{
+					batteryIndex = 7;
+				}
+				else if (batteryState.level <= 40)
+				{
+					batteryIndex = 8;
+				}
+				else if (batteryState.level <= 45)
+				{
+					batteryIndex = 9;
+				}
+				else if (batteryState.level <= 50)
+				{
+					batteryIndex = 10;
+				}
+				else if (batteryState.level <= 55)
+				{
+					batteryIndex = 11;
+				}
+				else if (batteryState.level <= 60)
+				{
+					batteryIndex = 12;
+				}
+				else if (batteryState.level <= 65)
+				{
+					batteryIndex = 13;
+				}
+				else if (batteryState.level <= 70)
+				{
+					batteryIndex = 14;
+				}
+				else if (batteryState.level <= 75)
+				{
+					batteryIndex = 15;
+				}
+				else if (batteryState.level <= 80)
+				{
+					batteryIndex = 16;
+				}
+				else if (batteryState.level <= 85)
+				{
+					batteryIndex = 17;
+				}
+				else if (batteryState.level <= 90)
+				{
+					batteryIndex = 18;
+				}
+				else if (batteryState.level <= 95)
+				{
+					batteryIndex = 19;
+				}
+				else if (batteryState.level == 100)
+				{
+					batteryIndex = 20;
+				}				
+				else
+				{
+					batteryIndex = 20;
+				}
+				
+				src += (batteryIndex * 16 * src_stride);
+				dst += (480 - 32) * sizeof(short);
+
+				for (int y = 0; y < 16; ++y)
+				{
+					memcpy(dst, src, 32 * sizeof(short));
+
+					src += src_stride;
+					dst += dst_stride;
+				}
+			}
+			
+			{
+				// Volume level
+				const uint8_t* src = volume_image.pixel_data;
+				int src_stride = 32 * sizeof(short);
+
+				uint8_t* dst = (uint8_t*)go2_surface_map(titlebarSurface);
+				int dst_stride = go2_surface_stride_get(titlebarSurface);
+
+				uint32_t volume = go2_audio_volume_get(NULL);
+
+				int volumeIndex;
 				if (volume == 0)
 				{
 					volumeIndex = 0;
@@ -360,54 +472,6 @@ namespace Renderer
 				else
 				{
 					volumeIndex = 10;
-				}
-				
-				src += (batteryIndex * 16 * src_stride);
-				dst += (480 - 32) * sizeof(short);
-
-				for (int y = 0; y < 16; ++y)
-				{
-					memcpy(dst, src, 32 * sizeof(short));
-
-					src += src_stride;
-					dst += dst_stride;
-				}
-			}
-			
-			{
-				// Volume level
-				const uint8_t* src = volume_image.pixel_data;
-				int src_stride = 32 * sizeof(short);
-
-				uint8_t* dst = (uint8_t*)go2_surface_map(titlebarSurface);
-				int dst_stride = go2_surface_stride_get(titlebarSurface);
-
-				uint32_t volume = go2_audio_volume_get(NULL);
-
-				int volumeIndex;
-				if (volume == 0)
-				{
-					volumeIndex = 0;
-				}
-				else if (volume <= 20)
-				{
-					volumeIndex = 1;
-				}
-				else if (volume <= 40)
-				{
-					volumeIndex = 2;
-				}
-				else if (volume <= 60)
-				{
-					volumeIndex = 3;
-				}
-				else if (volume <= 80)
-				{
-					volumeIndex = 4;
-				}
-				else
-				{
-					volumeIndex = 5;
 				}
 				
 				src += (volumeIndex * 16 * src_stride);
