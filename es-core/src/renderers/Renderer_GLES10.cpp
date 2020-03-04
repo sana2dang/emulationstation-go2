@@ -429,49 +429,85 @@ namespace Renderer
 				{
 					volumeIndex = 1;
 				}
-				else if (volume <= 15)
+				else if (volume <= 10)
 				{
 					volumeIndex = 2;
 				}
-				else if (volume <= 25)
+				else if (volume <= 15)
 				{
 					volumeIndex = 3;
 				}
-				else if (volume <= 35)
+				else if (volume <= 20)
 				{
 					volumeIndex = 4;
 				}
-				else if (volume <= 45)
+				else if (volume <= 25)
 				{
 					volumeIndex = 5;
 				}
-				else if (volume <= 55)
+				else if (volume <= 30)
 				{
 					volumeIndex = 6;
 				}
-				else if (volume <= 65)
+				else if (volume <= 35)
 				{
 					volumeIndex = 7;
 				}
-				else if (volume <= 75)
+				else if (volume <= 40)
 				{
 					volumeIndex = 8;
 				}
-				else if (volume <= 85)
+				else if (volume <= 45)
 				{
 					volumeIndex = 9;
+				}
+				else if (volume <= 50)
+				{
+					volumeIndex = 10;
+				}
+				else if (volume <= 55)
+				{
+					volumeIndex = 11;
+				}
+				else if (volume <= 60)
+				{
+					volumeIndex = 12;
+				}
+				else if (volume <= 65)
+				{
+					volumeIndex = 13;
+				}
+				else if (volume <= 70)
+				{
+					volumeIndex = 14;
+				}
+				else if (volume <= 75)
+				{
+					volumeIndex = 15;
+				}
+				else if (volume <= 80)
+				{
+					volumeIndex = 16;
+				}
+				else if (volume <= 85)
+				{
+					volumeIndex = 17;
+				}
+				else if (volume <= 90)
+				{
+					volumeIndex = 18;
 				}
 				else if (volume <= 95)
 				{
-					volumeIndex = 9;
+					volumeIndex = 19;
 				}
 				else if (volume = 100)
 				{
-					volumeIndex = 10;
+					volumeIndex = 20;
 				}
 				else
 				{
-					volumeIndex = 10;
+					volumeIndex = 20;
 				}
 				
 				src += (volumeIndex * 16 * src_stride);
