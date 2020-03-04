@@ -309,25 +309,57 @@ namespace Renderer
 				go2_input_battery_read(input, &batteryState);
 
 				int batteryIndex;
-				if (batteryState.level <= 5)
+				if (volume == 0)
 				{
-					batteryIndex = 0;
+					volumeIndex = 0;
 				}
-				else if (batteryState.level <= 25)
+				else if (volume <= 5)
 				{
-					batteryIndex = 1;
+					volumeIndex = 1;
 				}
-				else if (batteryState.level <= 50)
+				else if (volume <= 15)
 				{
-					batteryIndex = 2;
+					volumeIndex = 2;
 				}
-				else if (batteryState.level <= 75)
+				else if (volume <= 25)
 				{
-					batteryIndex = 3;
+					volumeIndex = 3;
+				}
+				else if (volume <= 35)
+				{
+					volumeIndex = 4;
+				}
+				else if (volume <= 45)
+				{
+					volumeIndex = 5;
+				}
+				else if (volume <= 55)
+				{
+					volumeIndex = 6;
+				}
+				else if (volume <= 65)
+				{
+					volumeIndex = 7;
+				}
+				else if (volume <= 75)
+				{
+					volumeIndex = 8;
+				}
+				else if (volume <= 85)
+				{
+					volumeIndex = 9;
+				}
+				else if (volume <= 95)
+				{
+					volumeIndex = 9;
+				}
+				else if (volume = 100)
+				{
+					volumeIndex = 10;
 				}
 				else
 				{
-					batteryIndex = 4;
+					volumeIndex = 10;
 				}
 				
 				src += (batteryIndex * 16 * src_stride);
