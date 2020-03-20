@@ -64,7 +64,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 			}
 			return false;
 		};
-		mMenu.addRow(row);
+		//mMenu.addRow(row);
 
 		// sort list by
 		mListSort = std::make_shared<SortList>(mWindow, "게임 정렬", false);
