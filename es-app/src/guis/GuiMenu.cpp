@@ -25,6 +25,8 @@
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "메인 메뉴"), mVersion(window)
 {
+	addEntry("OGA-9P Edition", 0x777777FF, true, [this] { });
+	
 	addEntry("화면 설정", 0x777777FF, true, [this] { openDisplaySettings(); });
 
 	bool isFullUI = UIModeController::getInstance()->isUIModeFull();
