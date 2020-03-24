@@ -50,7 +50,8 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 			}
 		}
 
-		row.addElement(std::make_shared<TextComponent>(mWindow, "이동...", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.addElement(std::make_shared<TextComponent>(mWindow, "OGA-9P Edition", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		/*
 		row.addElement(mJumpToLetterList, false);
 		row.input_handler = [&](InputConfig* config, Input input) {
 			if(config->isMappedTo("a", input) && input.value)
@@ -64,7 +65,8 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 			}
 			return false;
 		};
-		//mMenu.addRow(row);
+		*/
+		mMenu.addRow(row);
 
 		// sort list by
 		mListSort = std::make_shared<SortList>(mWindow, "게임 정렬", false);
