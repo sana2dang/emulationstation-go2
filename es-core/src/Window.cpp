@@ -312,16 +312,18 @@ void Window::renderLoadingScreen(std::string text)
 	Renderer::drawRect(0.0f, 0.0f, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000FF, 0x000000FF);
 
 	ImageComponent splash(this, true);
-	splash.setResize(Renderer::getScreenWidth() * 0.0f, 0.0f);
+	//splash.setResize(Renderer::getScreenWidth() * 0.0f, 0.0f);
+	splash.setResize( 480, 304 );
 	splash.setImage(":/splash.png");
-	splash.setPosition((Renderer::getScreenWidth() - splash.getSize().x()) / 2, (Renderer::getScreenHeight() - splash.getSize().y()) / 2 * 0.6f);
+	//splash.setPosition((Renderer::getScreenWidth() - splash.getSize().x()) / 2, (Renderer::getScreenHeight() - splash.getSize().y()) / 2 * 0.6f);
+	splash.setPosition( 0, 0 );
 	splash.render(trans);
 
 	auto& font = mDefaultFonts.at(1);
 	TextCache* cache = font->buildTextCache(text, 0, 0, 0x656565FF);
 
 	float x = Math::round((Renderer::getScreenWidth() - cache->metrics.size.x()) / 2.0f);
-	float y = Math::round(Renderer::getScreenHeight() * 0.835f);
+	float y = Math::round(Renderer::getScreenHeight() * 0.92f);
 	trans = trans.translate(Vector3f(x, y, 0.0f));
 	Renderer::setMatrix(trans);
 	font->renderTextCache(cache);
