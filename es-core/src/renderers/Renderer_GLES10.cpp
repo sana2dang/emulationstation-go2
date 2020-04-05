@@ -7,6 +7,7 @@
 
 #include <GLES/gl.h>
 #include <SDL.h>
+#include <unistd.h>
 
 #include <go2/display.h>
 #include <go2/input.h>
@@ -16,6 +17,7 @@
 #include "BatteryIcons.h"
 #include "VolumeIcons.h"
 #include "OdroidImage.h"
+#include "SdUsbIcons.h"
 
 bool g_screenshot_requested = false;
 
@@ -540,7 +542,37 @@ namespace Renderer
 					dst += dst_stride;
 				}
 			}
+			
+			{
+				// SD USB ICONS
+				const uint8_t* src = sdusb_image.pixel_data;
+				int src_stride = 32 * sizeof(short);
 
+				uint8_t* dst = (uint8_t*)go2_surface_map(titlebarSurface);
+				int dst_stride = go2_surface_stride_get(titlebarSurface);
+
+				int sdusbIndex;
+				
+				if( access( "/mnt/9p", F_OK ) != -1 ) {
+					// file exists
+					sdusbIndex = 1;
+				} else {
+					// file doesn't exist
+					sdusbIndex = 0;
+				}
+				
+				src += (sdusbIndex * 16 * src_stride);
+				dst += (480 - 96) * sizeof(short);
+
+				for (int y = 0; y < 16; ++y)
+				{
+					memcpy(dst, src, 32 * sizeof(short));
+
+					src += src_stride;
+					dst += dst_stride;
+				}
+			}
+			
 
 			go2_context_swap_buffers(context);
 			go2_surface_t* surface = go2_context_surface_lock(context);
