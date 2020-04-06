@@ -8,6 +8,8 @@
 #include <GLES/gl.h>
 #include <SDL.h>
 #include <unistd.h>
+#include <fcntl.h>
+
 
 #include <go2/display.h>
 #include <go2/input.h>
@@ -18,6 +20,7 @@
 #include "VolumeIcons.h"
 #include "OdroidImage.h"
 #include "SdUsbIcons.h"
+#include "WifiIcons.h"
 
 bool g_screenshot_requested = false;
 
@@ -410,6 +413,7 @@ namespace Renderer
 					src += src_stride;
 					dst += dst_stride;
 				}
+
 			}
 			
 			{
@@ -544,6 +548,50 @@ namespace Renderer
 			}
 			
 			{
+				
+				// WIFI ICONS
+				const uint8_t* src = wifi_image.pixel_data;
+				int src_stride = 32 * sizeof(short);
+
+				uint8_t* dst = (uint8_t*)go2_surface_map(titlebarSurface);
+				int dst_stride = go2_surface_stride_get(titlebarSurface);
+
+				int wifiIndex = 0;
+
+				// Wifi
+				int fd;
+				char buffer[10];
+				fd = open("/sys/class/net/wlan0/operstate", O_RDONLY);
+				if (fd > 0)
+				{
+					memset(buffer, 0, 10);
+					ssize_t count = read(fd, buffer, 10);
+					if( count > 0 )
+					{
+						if( strstr( buffer, "up") != NULL )
+							wifiIndex = 1;
+						else
+							wifiIndex = 0;
+					}
+					close(fd);
+				}
+				if( wifiIndex == 1 )
+				{
+					src += (wifiIndex* 16 * src_stride);
+					dst += (480 - 74) * sizeof(short);
+
+					for (int y = 0; y < 16; ++y)
+					{
+						memcpy(dst, src, 32 * sizeof(short));
+
+						src += src_stride;
+						dst += dst_stride;
+					}
+
+				}
+			}
+			
+			{
 				// SD USB ICONS
 				const uint8_t* src = sdusb_image.pixel_data;
 				int src_stride = 32 * sizeof(short);
@@ -551,7 +599,7 @@ namespace Renderer
 				uint8_t* dst = (uint8_t*)go2_surface_map(titlebarSurface);
 				int dst_stride = go2_surface_stride_get(titlebarSurface);
 
-				int sdusbIndex;
+				int sdusbIndex=0;
 				
 				if( access( "/mnt/9p", F_OK ) != -1 ) {
 					// file exists
@@ -561,19 +609,21 @@ namespace Renderer
 					sdusbIndex = 0;
 				}
 				
-				src += (sdusbIndex * 16 * src_stride);
-				dst += (480 - 96) * sizeof(short);
-
-				for (int y = 0; y < 16; ++y)
+				if( sdusbIndex == 1 )
 				{
-					memcpy(dst, src, 32 * sizeof(short));
+					src += (sdusbIndex * 16 * src_stride);
+					dst += (480 - 116) * sizeof(short);
 
-					src += src_stride;
-					dst += dst_stride;
+					for (int y = 0; y < 16; ++y)
+					{
+						memcpy(dst, src, 32 * sizeof(short));
+
+						src += src_stride;
+						dst += dst_stride;
+					}
 				}
 			}
 			
-
 			go2_context_swap_buffers(context);
 			go2_surface_t* surface = go2_context_surface_lock(context);
 
