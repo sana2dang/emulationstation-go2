@@ -25,7 +25,7 @@
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "메인 메뉴"), mVersion(window)
 {
-	addEntry("OGA-9P Edition", 0x777777FF, true, [this] { openOga9PSettings(); });
+	addEntry("OGA ", 0x777777FF, true, [this] { openOga9PSettings(); });
 
 	addEntry("화면 설정", 0x777777FF, true, [this] { openDisplaySettings(); });
 
@@ -104,7 +104,7 @@ void GuiMenu::openOga9PSettings()
 
 	// 빌드버전
 	row.elements.clear();
-	char version[50] = "----- OGA-9P-V3 build 3.1 -----";
+	char version[100] = "------ OGA-9P-V3 Edition build 3.1 ------";
 	row.addElement(std::make_shared<TextComponent>(window, version, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	s->addRow(row);
 
