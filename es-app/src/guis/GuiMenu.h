@@ -27,6 +27,8 @@ private:
 	void openSoundSettings();
 	void openUISettings();
 	void openDisplaySettings();
+	void openOga9PSettings();
+	void getInfo(const char *cmdline, char info_buff[], int size);
 	
 	MenuComponent mMenu;
 	TextComponent mVersion;

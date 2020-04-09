@@ -19,14 +19,17 @@
 #include <SDL_events.h>
 #include <algorithm>
 #include "platform.h"
+#include <arpa/inet.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
 
 #include <go2/display.h>
 
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "메인 메뉴"), mVersion(window)
 {
-	addEntry("OGA-9P Edition", 0x777777FF, true, [this] { });
-	
+	addEntry("OGA-9P Edition", 0x777777FF, true, [this] { openOga9PSettings(); });
+
 	addEntry("화면 설정", 0x777777FF, true, [this] { openDisplaySettings(); });
 
 	bool isFullUI = UIModeController::getInstance()->isUIModeFull();
@@ -55,6 +58,47 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "메인 �
 	addVersionInfo();
 	setSize(mMenu.getSize());
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.15f);
+}
+
+
+void GuiMenu::getInfo(const char *cmdline, char info_buff[], int size)
+{
+	FILE *fp;
+	
+	fp=popen(cmdline,"r");
+
+	if( NULL != fp )
+	{	
+		fgets(info_buff, size, fp);		
+		*(info_buff+(strlen(info_buff)-1))=0;  /* fget() 사용시 개행문자 \n 제거 */
+
+		pclose( fp );
+	}
+}
+
+void GuiMenu::openOga9PSettings()
+{
+	// OGA-9P Settings
+	auto s = new GuiSettings(mWindow, "OGA-9P 정보");
+	Window* window = mWindow;
+	ComponentListRow row;
+
+	// eth, wlan 아이피 표시
+	char ip[100];
+	getInfo("echo \"IP 정보 : `hostname -I`\"", ip, sizeof(ip));
+	row.addElement(std::make_shared<TextComponent>(window, ip, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	s->addRow(row);
+
+	row.elements.clear();
+	// 전체, 남은 용량 표시
+	char df[100];
+	getInfo("df -h | grep /dev/mmcblk0p2 | awk '{print \"전체용량 : \"$2 \" / 남은용량 : \"  $3}'", df, sizeof(df));
+	row.addElement(std::make_shared<TextComponent>(window, df, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	s->addRow(row);
+
+	mWindow->pushGui(s);
+
+
 }
 
 void GuiMenu::openDisplaySettings()
