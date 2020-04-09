@@ -19,9 +19,6 @@
 #include <SDL_events.h>
 #include <algorithm>
 #include "platform.h"
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
-#include <net/if.h>
 
 #include <go2/display.h>
 
