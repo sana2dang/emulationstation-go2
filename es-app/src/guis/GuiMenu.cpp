@@ -87,10 +87,10 @@ void GuiMenu::openOga9PSettings()
 	s->addRow(row);
 
 	
-	// 전체, 남은 용량 표시
+	// 전체, 여유 용량 표시
 	row.elements.clear();
 	char df[100];
-	getInfo("df -h | grep /dev/mmcblk0p2 | awk '{print \"전체용량 : \"$2 \" / 남은용량 : \"  $3}'", df, sizeof(df));
+	getInfo("df -h | grep /dev/mmcblk0p2 | awk '{print \"전체용량 : \"$2 \" / 여유용량 : \"  $4}'", df, sizeof(df));
 	row.addElement(std::make_shared<TextComponent>(window, df, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	s->addRow(row);
 
