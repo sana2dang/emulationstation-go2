@@ -76,7 +76,7 @@ void GuiMenu::getInfo(const char *cmdline, char info_buff[], int size)
 void GuiMenu::openOga9PSettings()
 {
 	// OGA-9P Settings
-	auto s = new GuiSettings(mWindow, "OGA-9P 정보");
+	auto s = new GuiSettings(mWindow, "OGA 상태 정보");
 	Window* window = mWindow;
 	ComponentListRow row;
 
@@ -86,12 +86,28 @@ void GuiMenu::openOga9PSettings()
 	row.addElement(std::make_shared<TextComponent>(window, ip, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	s->addRow(row);
 
-	row.elements.clear();
+	
 	// 전체, 남은 용량 표시
+	row.elements.clear();
 	char df[100];
 	getInfo("df -h | grep /dev/mmcblk0p2 | awk '{print \"전체용량 : \"$2 \" / 남은용량 : \"  $3}'", df, sizeof(df));
 	row.addElement(std::make_shared<TextComponent>(window, df, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	s->addRow(row);
+
+
+	// 볼륨, 밝기, 배터리
+	row.elements.clear();
+	char status[100];
+	getInfo("echo \"볼륨 : \"`amixer sget Playback | grep 'Right:' | awk -F'[][]' '{ print $2 }'`\" / 밝기 : \"`expr \\`cat /sys/class/backlight/backlight/brightness\\` \\* 100 / 255`%\" / 배터리 : \"`cat /sys/class/power_supply/battery/capacity`%", status, sizeof(df));
+	row.addElement(std::make_shared<TextComponent>(window, status, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	s->addRow(row);
+
+	// 빌드버전
+	row.elements.clear();
+	char version[50] = "OGA-9P-V3 build 3.1";
+	row.addElement(std::make_shared<TextComponent>(window, version, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	s->addRow(row);
+
 
 	mWindow->pushGui(s);
 
