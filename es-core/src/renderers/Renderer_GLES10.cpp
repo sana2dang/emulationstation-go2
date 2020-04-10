@@ -21,6 +21,7 @@
 #include "OdroidImage.h"
 #include "SdUsbIcons.h"
 #include "WifiIcons.h"
+#include "BrightnessIcon.h"
 
 bool g_screenshot_requested = false;
 
@@ -527,6 +528,134 @@ namespace Renderer
 					dst += dst_stride;
 				}
 			}
+
+
+			{
+				// Brightness level
+				const uint8_t* src = brightness_image.pixel_data;
+				int src_stride = 32 * sizeof(short);
+
+				uint8_t* dst = (uint8_t*)go2_surface_map(titlebarSurface);
+				int dst_stride = go2_surface_stride_get(titlebarSurface);
+
+				int brightnessIndex = 0;
+				int brightness = 0;
+				int fd;
+				char buffer[10];
+				fd = open("/sys/class/backlight/backlight/brightness", O_RDONLY);
+				if (fd > 0)
+				{
+					memset(buffer, 0, 10);
+					ssize_t count = read(fd, buffer, 10);
+					if( count > 0 )
+					{
+						brightness = atoi(buffer);
+					}
+					close(fd);
+				}
+
+
+				if (brightness == 0)
+				{
+					brightnessIndex = 0;
+				}
+				else if (brightness <= 5)
+				{
+					brightnessIndex = 1;
+				}
+				else if (brightness <= 10)
+				{
+					brightnessIndex = 2;
+				}
+				else if (brightness <= 15)
+				{
+					brightnessIndex = 3;
+				}
+				else if (brightness <= 20)
+				{
+					brightnessIndex = 4;
+				}
+				else if (brightness <= 25)
+				{
+					brightnessIndex = 5;
+				}
+				else if (brightness <= 30)
+				{
+					brightnessIndex = 6;
+				}
+				else if (brightness <= 35)
+				{
+					brightnessIndex = 7;
+				}
+				else if (brightness <= 40)
+				{
+					brightnessIndex = 8;
+				}
+				else if (brightness <= 45)
+				{
+					brightnessIndex = 9;
+				}
+				else if (brightness <= 50)
+				{
+					brightnessIndex = 10;
+				}
+				else if (brightness <= 55)
+				{
+					brightnessIndex = 11;
+				}
+				else if (brightness <= 60)
+				{
+					brightnessIndex = 12;
+				}
+				else if (brightness <= 65)
+				{
+					brightnessIndex = 13;
+				}
+				else if (brightness <= 70)
+				{
+					brightnessIndex = 14;
+				}
+				else if (brightness <= 75)
+				{
+					brightnessIndex = 15;
+				}
+				else if (brightness <= 80)
+				{
+					brightnessIndex = 16;
+				}
+				else if (brightness <= 85)
+				{
+					brightnessIndex = 17;
+				}
+				else if (brightness <= 90)
+				{
+					brightnessIndex = 18;
+				}
+				else if (brightness <= 95)
+				{
+					brightnessIndex = 19;
+				}
+				else if (brightness = 100)
+				{
+					brightnessIndex = 20;
+				}
+				else
+				{
+					brightnessIndex = 20;
+				}
+				
+				src += (brightnessIndex * 16 * src_stride);
+				dst += (64) * sizeof(short);
+
+				for (int y = 0; y < 16; ++y)
+				{
+					memcpy(dst, src, 32 * sizeof(short));
+
+					src += src_stride;
+					dst += dst_stride;
+				}
+			}
+
 
 			{
 				// Title
