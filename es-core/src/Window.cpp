@@ -313,7 +313,7 @@ void Window::renderLoadingScreen(std::string text)
 
 	ImageComponent splash(this, true);
 	//splash.setResize(Renderer::getScreenWidth() * 0.0f, 0.0f);
-	splash.setResize( 480, 304 );
+	splash.setResize( 481, 305 );
 	splash.setImage(":/splash.png");
 	//splash.setPosition((Renderer::getScreenWidth() - splash.getSize().x()) / 2, (Renderer::getScreenHeight() - splash.getSize().y()) / 2 * 0.6f);
 	splash.setPosition( 0, 0 );
