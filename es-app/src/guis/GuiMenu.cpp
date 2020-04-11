@@ -25,7 +25,7 @@
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "메인 메뉴"), mVersion(window)
 {
-	addEntry("OGA ", 0x777777FF, true, [this] { openOga9PSettings(); });
+	addEntry("OGA 상태정보", 0x777777FF, true, [this] { openOga9PSettings(); });
 
 	addEntry("화면 설정", 0x777777FF, true, [this] { openDisplaySettings(); });
 
