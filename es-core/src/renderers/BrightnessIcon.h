@@ -1,4 +1,4 @@
-/* GIMP RGB C-Source image dump (WifiIcons.c) */
+/* GIMP RGB C-Source image dump (BrightnessIcons.c) */
 
 static const struct {
   unsigned int 	 width;
