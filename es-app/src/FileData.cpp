@@ -68,7 +68,7 @@ const std::string FileData::getThumbnailPath() const
 			{
 				if(thumbnail.empty())
 				{
-					std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-image" + extList[i];
+					std::string path = mEnvData->mStartPath + "/snap/" + getDisplayName() + extList[i];
 					if(Utils::FileSystem::exists(path))
 						thumbnail = path;
 				}
@@ -119,7 +119,7 @@ const std::string FileData::getVideoPath() const
 	// no video, try to use local video
 	if(video.empty() && Settings::getInstance()->getBool("LocalArt"))
 	{
-		std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-video.mp4";
+		std::string path = mEnvData->mStartPath + "/snap/" + getDisplayName() + ".mp4";
 		if(Utils::FileSystem::exists(path))
 			video = path;
 	}
@@ -139,7 +139,7 @@ const std::string FileData::getMarqueePath() const
 		{
 			if(marquee.empty())
 			{
-				std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-marquee" + extList[i];
+				std::string path = mEnvData->mStartPath + "/snap/" + getDisplayName() + extList[i];
 				if(Utils::FileSystem::exists(path))
 					marquee = path;
 			}
@@ -161,7 +161,7 @@ const std::string FileData::getImagePath() const
 		{
 			if(image.empty())
 			{
-				std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-image" + extList[i];
+				std::string path = mEnvData->mStartPath + "/snap/" + getDisplayName() + extList[i];
 				if(Utils::FileSystem::exists(path))
 					image = path;
 			}
