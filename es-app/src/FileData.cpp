@@ -139,7 +139,7 @@ const std::string FileData::getMarqueePath() const
 		{
 			if(marquee.empty())
 			{
-				std::string path = mEnvData->mStartPath + "/snap/" + getDisplayName() + extList[i];
+				std::string path = mEnvData->mStartPath + "/marquee/" + getDisplayName() + extList[i];
 				if(Utils::FileSystem::exists(path))
 					marquee = path;
 			}
