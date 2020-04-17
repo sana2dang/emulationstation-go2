@@ -17,9 +17,6 @@
 #include "SystemData.h"
 #include "Window.h"
 
-#include "utils/ThreadPool.h"
-#include <mutex>
-
 ViewController* ViewController::sInstance = NULL;
 
 ViewController* ViewController::get()
@@ -438,14 +435,14 @@ void ViewController::preload()
 
 	bool splash = Settings::getInstance()->getBool("SplashScreen") && Settings::getInstance()->getBool("SplashScreenProgress");
 	if (splash)
-		mWindow->renderLoadingScreen("테마 로딩중...", (float)i / (float)max);
+		mWindow->renderLoadingScreen("Preloading UI", (float)i / (float)max);
 
 	for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++)
 	{
 		if (splash)
 		{
 			i++;
-			mWindow->renderLoadingScreen("테마 로딩중...", (float)i / (float)max);
+			mWindow->renderLoadingScreen("Preloading UI", (float)i / (float)max);
 		}
 
 		(*it)->getIndex()->resetFilters();
@@ -487,11 +484,8 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 
 void ViewController::reloadAll()
 {
-	Utils::FileSystem::FileSystemCacheActivator fsc;
-
 	// clear all gamelistviews
 	std::map<SystemData*, FileData*> cursorMap;
-
 	for(auto it = mGameListViews.cbegin(); it != mGameListViews.cend(); it++)
 	{
 		cursorMap[it->first] = it->second->getCursor();
@@ -499,28 +493,11 @@ void ViewController::reloadAll()
 	mGameListViews.clear();
 
 
-
-	Utils::ThreadPool pool;
-
-	for (auto it = cursorMap.cbegin(); it != cursorMap.cend(); it++)
-	{
-		auto system = it->first;
-		pool.queueWorkItem([system]
-		{
-			system->loadTheme();
-			system->getIndex()->resetFilters();	
-		});		
-	}
-
-	pool.wait();
-
-
-
 	// load themes, create gamelistviews and reset filters
 	for(auto it = cursorMap.cbegin(); it != cursorMap.cend(); it++)
 	{
-		//it->first->loadTheme();
-		//it->first->getIndex()->resetFilters();
+		it->first->loadTheme();
+		it->first->getIndex()->resetFilters();
 		getGameListView(it->first)->setCursor(it->second);
 	}
 

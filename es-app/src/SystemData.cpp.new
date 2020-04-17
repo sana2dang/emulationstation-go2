@@ -298,8 +298,6 @@ bool SystemData::loadConfig(Window* window)
 	}
 
 
-	Utils::FileSystem::FileSystemCacheActivator fsc;
-
 	int currentSystem = 0;
 
 	typedef SystemData* SystemDataPtr;
