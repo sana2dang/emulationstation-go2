@@ -550,6 +550,7 @@ namespace Renderer
 					if( count > 0 )
 					{
 						brightness = atoi(buffer);
+						brightness = brightness*100/255;
 					}
 					close(fd);
 				}
