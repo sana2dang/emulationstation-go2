@@ -47,7 +47,13 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	{
 		for(auto it = files.cbegin(); it != files.cend(); it++)
 		{
-			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+
+			if ((*it)->getFavorite())
+			{
+				mList.add("★" + (*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				continue;
+			}
+			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));			
 		}
 	}
 	else
@@ -93,8 +99,11 @@ void BasicGameListView::setCursor(FileData* cursor)
 void BasicGameListView::addPlaceholder()
 {
 	// empty list - add a placeholder
-	FileData* placeholder = new FileData(PLACEHOLDER, "<No Entries Found>", this->mRoot->getSystem()->getSystemEnvData(), this->mRoot->getSystem());
+	
+
+	FileData* placeholder = new FileData(PLACEHOLDER, "<No Entries Found>", this->mRoot->getSystem()->getSystemEnvData(), this->mRoot->getSystem());	
 	mList.add(placeholder->getName(), placeholder, (placeholder->getType() == PLACEHOLDER));
+
 }
 
 std::string BasicGameListView::getQuickSystemSelectRightButton()
