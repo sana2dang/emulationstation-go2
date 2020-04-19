@@ -14,7 +14,7 @@ GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration) :
 
 	std::shared_ptr<TextComponent> s = std::make_shared<TextComponent>(mWindow,
 		"",
-		Font::get(FONT_SIZE_MINI),
+		Font::get(20),
 		0x444444FF,
 		ALIGN_CENTER);
 
