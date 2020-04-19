@@ -79,6 +79,11 @@ const std::string FileData::getThumbnailPath() const
 	return thumbnail;
 }
 
+const bool FileData::getFavorite()
+{
+	return metadata.get("favorite")  == "true";
+}
+
 const std::string& FileData::getName()
 {
 	return metadata.get("name");

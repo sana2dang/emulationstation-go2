@@ -524,6 +524,9 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 			}
 			file->getSourceFileData()->getSystem()->getIndex()->addToIndex(file);
 			refreshCollectionSystems(file->getSourceFileData());
+
+			ViewController::get()->onFileChanged(file, FILE_METADATA_CHANGED);
+			ViewController::get()->getGameListView( getSystemToView(file->getSourceFileData()->getSystem()) )->onFileChanged(file, FILE_METADATA_CHANGED);
 		}
 		if (adding)
 		{
