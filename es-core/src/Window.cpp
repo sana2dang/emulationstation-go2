@@ -9,8 +9,7 @@
 #include "Scripting.h"
 #include <algorithm>
 #include <iomanip>
-
-extern bool g_screenshot_requested;
+#include <SDL_events.h>
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10),
 	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0), mScreenSaver(NULL), mRenderScreenSaver(false), mInfoPopup(NULL)
@@ -118,12 +117,6 @@ void Window::textInput(const char* text)
 
 void Window::input(InputConfig* config, Input input)
 {
-	if (config->isMappedTo("prtscn", input) && input.value == 1)
-	{
-		printf("Screenshot.\n");
-		g_screenshot_requested = true;
-	}
-
 	if (mScreenSaver) {
 		if(mScreenSaver->isScreenSaverActive() && Settings::getInstance()->getBool("ScreenSaverControls") &&
 		   (Settings::getInstance()->getString("ScreenSaverBehavior") == "random video"))
@@ -305,11 +298,12 @@ void Window::setAllowSleep(bool sleep)
 	mAllowSleep = sleep;
 }
 
-void Window::renderLoadingScreen(std::string text)
+void Window::renderLoadingScreen(std::string text, float percent, unsigned char opacity)
 {
 	Transform4x4f trans = Transform4x4f::Identity();
 	Renderer::setMatrix(trans);
 	Renderer::drawRect(0.0f, 0.0f, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000FF, 0x000000FF);
+
 
 	ImageComponent splash(this, true);
 	//splash.setResize(Renderer::getScreenWidth() * 0.0f, 0.0f);
@@ -319,17 +313,40 @@ void Window::renderLoadingScreen(std::string text)
 	splash.setPosition( 0, 0 );
 	splash.render(trans);
 
+
+	if (percent >= 0)
+	{
+		float baseHeight = 0.03f;
+
+		float w = Renderer::getScreenWidth() / 2;
+		float h = Renderer::getScreenHeight() * baseHeight;
+
+		float x = Renderer::getScreenWidth() / 2 - w / 2;
+		//float y = Renderer::getScreenHeight() - (Renderer::getScreenHeight() * 3 * baseHeight);
+		float y = Renderer::getScreenHeight() * 0.92f;
+
+		Renderer::drawRect(x, y, w, h, 0x25252500 | opacity, 0x25252500 | opacity);
+		Renderer::drawRect(x, y, (w*percent), h, 0x006C9E00 | opacity, 0x006C9E00 | opacity); // 0xFFFFFFFF
+	}
+
+
 	auto& font = mDefaultFonts.at(1);
 	TextCache* cache = font->buildTextCache(text, 0, 0, 0x656565FF);
 
 	float x = Math::round((Renderer::getScreenWidth() - cache->metrics.size.x()) / 2.0f);
-	float y = Math::round(Renderer::getScreenHeight() * 0.92f);
+	float y = Math::round(Renderer::getScreenHeight() * 0.85f);
 	trans = trans.translate(Vector3f(x, y, 0.0f));
 	Renderer::setMatrix(trans);
 	font->renderTextCache(cache);
 	delete cache;
 
 	Renderer::swapBuffers();
+
+#if defined(_WIN32)
+	// Avoid Window Freezing on Windows
+	SDL_Event event;
+	while (SDL_PollEvent(&event));
+#endif
 }
 
 void Window::renderHelpPromptsEarly()

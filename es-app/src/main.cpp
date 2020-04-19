@@ -214,14 +214,14 @@ bool verifyHomeFolderExists()
 }
 
 // Returns true if everything is OK,
-bool loadSystemConfigFile(const char** errorString)
+bool loadSystemConfigFile(Window* window, const char** errorString)
 {
 	*errorString = NULL;
 
-	if(!SystemData::loadConfig())
+	if(!SystemData::loadConfig(window))
 	{
 		LOG(LogError) << "Error while parsing systems configuration file!";
-		*errorString = "시스템 설정 파일이 올바르지 않거나 설정되지 않았습니다. 안타깝게도 수작업으로 수정해야 할 것 같습니다.\n\n"
+		*errorString = "스템 설정 파일이 올바르지 않거나 설정되지 않았습니다. 안타깝게도 수작업으로 수정해야 할 것 같습니다.\n\n"
 			"자세한 정보는 EMULATIONSTATION.ORG에서 확인하세요.";
 		return false;
 	}
@@ -323,7 +323,7 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 
-		if(splashScreen)
+		if (splashScreen)
 		{
 			std::string progressText = "불러오는 중...";
 			if (splashScreenProgress)
@@ -333,7 +333,7 @@ int main(int argc, char* argv[])
 	}
 
 	const char* errorMsg = NULL;
-	if(!loadSystemConfigFile(&errorMsg))
+	if(!loadSystemConfigFile(splashScreen && splashScreenProgress ? &window : nullptr, &errorMsg))
 	{
 		// something went terribly wrong
 		if(errorMsg == NULL)
@@ -368,7 +368,7 @@ int main(int argc, char* argv[])
 	ViewController::get()->preload();
 
 	if(splashScreen && splashScreenProgress)
-		window.renderLoadingScreen("완료.");
+		window.renderLoadingScreen("완료!");
 
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)

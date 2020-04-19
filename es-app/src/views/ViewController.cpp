@@ -17,6 +17,9 @@
 #include "SystemData.h"
 #include "Window.h"
 
+#include "utils/ThreadPool.h"
+#include <mutex>
+
 ViewController* ViewController::sInstance = NULL;
 
 ViewController* ViewController::get()
@@ -430,17 +433,19 @@ void ViewController::render(const Transform4x4f& parentTrans)
 
 void ViewController::preload()
 {
-	uint32_t i = 0;
+	int i = 1;
+	int max = SystemData::sSystemVector.size() + 1;
+
+	bool splash = Settings::getInstance()->getBool("SplashScreen") && Settings::getInstance()->getBool("SplashScreenProgress");
+	if (splash)
+		mWindow->renderLoadingScreen("테마 로딩중...", (float)i / (float)max);
+
 	for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++)
 	{
-		if(Settings::getInstance()->getBool("SplashScreen") &&
-			Settings::getInstance()->getBool("SplashScreenProgress"))
+		if (splash)
 		{
 			i++;
-			char buffer[100];
-			sprintf (buffer, "불러오는 중 '%s' (%d/%d)",
-				(*it)->getFullName().c_str(), i, (int)SystemData::sSystemVector.size());
-			mWindow->renderLoadingScreen(std::string(buffer));
+			mWindow->renderLoadingScreen("테마 로딩중...", (float)i / (float)max);
 		}
 
 		(*it)->getIndex()->resetFilters();
@@ -482,8 +487,11 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 
 void ViewController::reloadAll()
 {
+	Utils::FileSystem::FileSystemCacheActivator fsc;
+
 	// clear all gamelistviews
 	std::map<SystemData*, FileData*> cursorMap;
+
 	for(auto it = mGameListViews.cbegin(); it != mGameListViews.cend(); it++)
 	{
 		cursorMap[it->first] = it->second->getCursor();
@@ -491,11 +499,28 @@ void ViewController::reloadAll()
 	mGameListViews.clear();
 
 
+
+	Utils::ThreadPool pool;
+
+	for (auto it = cursorMap.cbegin(); it != cursorMap.cend(); it++)
+	{
+		auto system = it->first;
+		pool.queueWorkItem([system]
+		{
+			system->loadTheme();
+			system->getIndex()->resetFilters();	
+		});		
+	}
+
+	pool.wait();
+
+
+
 	// load themes, create gamelistviews and reset filters
 	for(auto it = cursorMap.cbegin(); it != cursorMap.cend(); it++)
 	{
-		it->first->loadTheme();
-		it->first->getIndex()->resetFilters();
+		//it->first->loadTheme();
+		//it->first->getIndex()->resetFilters();
 		getGameListView(it->first)->setCursor(it->second);
 	}
 

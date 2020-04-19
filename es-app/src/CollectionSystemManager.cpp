@@ -124,7 +124,7 @@ void CollectionSystemManager::saveCustomCollection(SystemData* sys)
 
 /* Methods to load all Collections into memory, and handle enabling the active ones */
 // loads all Collection Systems
-void CollectionSystemManager::loadCollectionSystems()
+void CollectionSystemManager::loadCollectionSystems(bool async)
 {
 	initAutoCollectionSystems();
 	CollectionSystemDecl decl = mCollectionSystemDeclsIndex[myCollectionsName];
@@ -135,8 +135,10 @@ void CollectionSystemManager::loadCollectionSystems()
 	{
 		// Now see which ones are enabled
 		loadEnabledListFromSettings();
+
 		// add to the main System Vector, and create Views as needed
-		updateSystemsList();
+		if (!async)
+			updateSystemsList();
 	}
 }
 
@@ -144,7 +146,7 @@ void CollectionSystemManager::loadCollectionSystems()
 void CollectionSystemManager::loadEnabledListFromSettings()
 {
 	// we parse the auto collection settings list
-	std::vector<std::string> autoSelected = Utils::String::commaStringToVector(Settings::getInstance()->getString("CollectionSystemsAuto"), true);
+	std::vector<std::string> autoSelected = Utils::String::commaStringToVector(Settings::getInstance()->getString("CollectionSystemsAuto"));
 
 	// iterate the map
 	for(std::map<std::string, CollectionSystemData>::iterator it = mAutoCollectionSystemsData.begin() ; it != mAutoCollectionSystemsData.end() ; it++ )
@@ -153,7 +155,7 @@ void CollectionSystemManager::loadEnabledListFromSettings()
 	}
 
 	// we parse the custom collection settings list
-	std::vector<std::string> customSelected = Utils::String::commaStringToVector(Settings::getInstance()->getString("CollectionSystemsCustom"), true);
+	std::vector<std::string> customSelected = Utils::String::commaStringToVector(Settings::getInstance()->getString("CollectionSystemsCustom"));
 
 	// iterate the map
 	for(std::map<std::string, CollectionSystemData>::iterator it = mCustomCollectionSystemsData.begin() ; it != mCustomCollectionSystemsData.end() ; it++ )
@@ -525,11 +527,11 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 		}
 		if (adding)
 		{
-			s = new GuiInfoPopup(mWindow, "'" + Utils::String::removeParenthesis(name) + "'게임 추가 '" + Utils::String::toUpper(sysName) + "'", 4000);
+			s = new GuiInfoPopup(mWindow, "'" + Utils::String::removeParenthesis(name) + "'게임추가 '" + Utils::String::toUpper(sysName) + "'", 4000);
 		}
 		else
 		{
-			s = new GuiInfoPopup(mWindow, "'" + Utils::String::removeParenthesis(name) + "'게임 삭제 '" + Utils::String::toUpper(sysName) + "'", 4000);
+			s = new GuiInfoPopup(mWindow, "'" + Utils::String::removeParenthesis(name) + "'게임삭제 '" + Utils::String::toUpper(sysName) + "'", 4000);
 		}
 		mWindow->setInfoPopup(s);
 		return true;
@@ -575,7 +577,7 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 {
 	FileData* rootFolder = sys->getRootFolder();
 
-	std::string desc = "현재 컬렉션이 비어있습니다.";
+	std::string desc = "현재 컬렉션이 비어있습니다..";
 	std::string rating = "0";
 	std::string players = "1";
 	std::string releasedate = "없음";
@@ -621,7 +623,7 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 			}
 		}
 
-		desc = "현재 컬렉션에는 " + games_list + " 등을 포함한 " + std::to_string(games_counter) + "개의 게임이 있습니다." ;
+		desc = "현재 컬렉션에는 " + games_list + " 등을 포함한 " + std::to_string(games_counter) + "개의 게임이 있습니다. " + games_list;
 
 		FileData* randomGame = sys->getRandomGame();
 

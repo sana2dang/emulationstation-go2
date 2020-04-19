@@ -178,10 +178,9 @@ unsigned int getHexColor(const char* str)
 		throw error << "Invalid color (bad length, \"" << str << "\" - must be 6 or 8)";
 
 	unsigned int val;
-//	std::stringstream ss;
-//	ss << str;
-//	ss >> std::hex >> val;
-	sscanf(str, "%x", &val);
+	std::stringstream ss;
+	ss << str;
+	ss >> std::hex >> val;
 
 	if(len == 6)
 		val = (val << 8) | 0xFF;
@@ -261,8 +260,7 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 	for(pugi::xml_node node = root.child("include"); node; node = node.next_sibling("include"))
 	{
 		std::string relPath = resolvePlaceholders(node.text().as_string());
-		//std::string path = Utils::FileSystem::resolveRelativePath(relPath, mPaths.back(), true);
-		std::string path = Utils::FileSystem::resolveRelativePath(relPath, Utils::FileSystem::getParent(mPaths.back()), true);
+		std::string path = Utils::FileSystem::resolveRelativePath(relPath, mPaths.back(), true);
 		if(!ResourceManager::getInstance()->fileExists(path))
 			throw error << "Included file \"" << relPath << "\" not found! (resolved to \"" << path << "\")";
 
@@ -416,13 +414,12 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			if(divider == std::string::npos)
 				throw error << "invalid normalized pair (property \"" << node.name() << "\", value \"" << str.c_str() << "\")";
 
-			//std::string first = str.substr(0, divider);
-			//std::string second = str.substr(divider, std::string::npos);
+			std::string first = str.substr(0, divider);
+			std::string second = str.substr(divider, std::string::npos);
 
-			//Vector2f val((float)atof(first.c_str()), (float)atof(second.c_str()));
-			float first = atof(str.substr(0, divider).c_str());
-			float second = atof(str.substr(divider, std::string::npos).c_str());
-			element.properties[node.name()] = Vector2f(first, second);
+			Vector2f val((float)atof(first.c_str()), (float)atof(second.c_str()));
+
+			element.properties[node.name()] = val;
 			break;
 		}
 		case STRING:
@@ -430,8 +427,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			break;
 		case PATH:
 		{
-			//std::string path = Utils::FileSystem::resolveRelativePath(str, mPaths.back(), true);
-			std::string path = Utils::FileSystem::resolveRelativePath(str, Utils::FileSystem::getParent(mPaths.back()), true);
+			std::string path = Utils::FileSystem::resolveRelativePath(str, mPaths.back(), true);
 			if(!ResourceManager::getInstance()->fileExists(path))
 			{
 				std::stringstream ss;
@@ -449,10 +445,8 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			break;
 		case FLOAT:
 		{
-			//float floatVal = static_cast<float>(strtod(str.c_str(), 0));
-			//element.properties[node.name()] = floatVal;
-			//float floatVal = atof(str.c_str());  static_cast<float>(strtod(str.c_str(), 0));
-			element.properties[node.name()] = (float) atof(str.c_str()); //floatVal;
+			float floatVal = static_cast<float>(strtod(str.c_str(), 0));
+			element.properties[node.name()] = floatVal;
 			break;
 		}
 

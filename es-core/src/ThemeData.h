@@ -3,7 +3,6 @@
 #define ES_CORE_THEME_DATA_H
 
 #include "math/Vector2f.h"
-#include "math/Vector4f.h"
 #include "utils/FileSystemUtil.h"
 #include <deque>
 #include <map>
@@ -95,14 +94,12 @@ public:
 
 		struct Property
 		{
-			void operator= (const Vector4f& value)     { r = value; v = Vector2f(value.x(), value.y()); }
 			void operator= (const Vector2f& value)     { v = value; }
 			void operator= (const std::string& value)  { s = value; }
 			void operator= (const unsigned int& value) { i = value; }
 			void operator= (const float& value)        { f = value; }
 			void operator= (const bool& value)         { b = value; }
 
-			Vector4f     r;
 			Vector2f     v;
 			std::string  s;
 			unsigned int i;
@@ -120,7 +117,6 @@ public:
 			else if(std::is_same<T, unsigned int>::value) return *(const T*)&properties.at(prop).i;
 			else if(std::is_same<T, float>::value)        return *(const T*)&properties.at(prop).f;
 			else if(std::is_same<T, bool>::value)         return *(const T*)&properties.at(prop).b;
-			else if(std::is_same<T, Vector4f>::value)     return *(const T*)&properties.at(prop).r;
 			return T();
 		}
 
@@ -144,7 +140,6 @@ public:
 
 	enum ElementPropertyType
 	{
-		NORMALIZED_RECT,
 		NORMALIZED_PAIR,
 		PATH,
 		STRING,
@@ -181,6 +176,9 @@ private:
 	void parseElement(const pugi::xml_node& elementNode, const std::map<std::string, ElementPropertyType>& typeMap, ThemeElement& element);
 
 	std::map<std::string, ThemeView> mViews;
+
+	std::string resolvePlaceholders(const char* in);
+	std::map<std::string, std::string> mVariables;
 };
 
 #endif // ES_CORE_THEME_DATA_H
