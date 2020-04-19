@@ -102,6 +102,15 @@ void GuiMenu::openOga9PSettings()
 	row.addElement(std::make_shared<TextComponent>(window, status, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	s->addRow(row);
 
+	
+	// 즐겨찾기 제일 상단 노출
+	auto favoritesFirstSwitch = std::make_shared<SwitchComponent>(mWindow);
+	favoritesFirstSwitch->setState(Settings::getInstance()->getBool("FavoritesFirst"));
+	s->addWithLabel("즐겨찾기를 가장 위에 보여주기", favoritesFirstSwitch);
+	s->addSaveFunc([favoritesFirstSwitch] { Settings::getInstance()->setBool("FavoritesFirst", favoritesFirstSwitch->getState()); });
+
+
+
 	// 빌드버전
 	row.elements.clear();
 	char version[100] = "------ OGA-9P-V3 Edition build 3.1 ------";

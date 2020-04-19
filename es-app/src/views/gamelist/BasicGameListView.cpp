@@ -42,17 +42,47 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
-	mHeaderText.setText(mRoot->getSystem()->getFullName());
+	std::string systemName = mRoot->getSystem()->getFullName();
+	mHeaderText.setText(systemName);
+
+
+	bool favoritesFirst = Settings::getInstance()->getBool("FavoritesFirst");
+	bool showFavoriteIcon = (systemName != "즐겨찾기");
+	if (!showFavoriteIcon)
+		favoritesFirst = false;
+
 	if (files.size() > 0)
 	{
+
+		if (favoritesFirst)
+		{
+			for (auto it = files.cbegin(); it != files.cend(); it++)
+			{
+				if (!(*it)->getFavorite())
+					continue;
+				
+				if (showFavoriteIcon)
+					mList.add(" ★" + (*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				else
+					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));				
+			}
+		}
+
 		for(auto it = files.cbegin(); it != files.cend(); it++)
 		{
 
 			if ((*it)->getFavorite())
 			{
-				mList.add("★" + (*it)->getName(), *it, ((*it)->getType() == FOLDER));
-				continue;
+				if (favoritesFirst)
+					continue;
+				
+				if (showFavoriteIcon)
+				{
+					mList.add(" ★" + (*it)->getName(), *it, ((*it)->getType() == FOLDER));
+					continue;
+				}
 			}
+
 			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));			
 		}
 	}
@@ -101,7 +131,7 @@ void BasicGameListView::addPlaceholder()
 	// empty list - add a placeholder
 	
 
-	FileData* placeholder = new FileData(PLACEHOLDER, "<No Entries Found>", this->mRoot->getSystem()->getSystemEnvData(), this->mRoot->getSystem());	
+	FileData* placeholder = new FileData(PLACEHOLDER, "<리스트 없음>", this->mRoot->getSystem()->getSystemEnvData(), this->mRoot->getSystem());	
 	mList.add(placeholder->getName(), placeholder, (placeholder->getType() == PLACEHOLDER));
 
 }
