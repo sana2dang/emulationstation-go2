@@ -138,7 +138,7 @@ void Settings::setDefaults()
 	mBoolMap["CollectionShowSystemInfo"] = true;
 	mBoolMap["SortAllSystems"] = false;
 	mBoolMap["UseCustomCollectionsSystem"] = true;
-	mBoolMap["FavoritesFirst"] = true;
+	mBoolMap["FavoritesFirst"] = false;
 
 	mBoolMap["LocalArt"] = false;
 

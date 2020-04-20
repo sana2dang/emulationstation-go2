@@ -110,7 +110,6 @@ void GuiMenu::openOga9PSettings()
 	s->addSaveFunc([favoritesFirstSwitch] { Settings::getInstance()->setBool("FavoritesFirst", favoritesFirstSwitch->getState()); });
 
 
-
 	// 빌드버전
 	row.elements.clear();
 	char version[100] = "------ OGA-9P-V3 Edition build 3.1 ------";
