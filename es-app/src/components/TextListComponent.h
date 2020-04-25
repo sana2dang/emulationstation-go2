@@ -103,7 +103,7 @@ private:
 	bool mSelectorColorGradientHorizontal = true;
 	unsigned int mSelectedColor;
 	std::string mScrollSound;
-	static const unsigned int COLOR_ID_COUNT = 2;
+	static const unsigned int COLOR_ID_COUNT = 5;
 	unsigned int mColors[COLOR_ID_COUNT];
 
 	ImageComponent mSelectorImage;
@@ -129,8 +129,11 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mSelectorColorEnd = 0x000000FF;
 	mSelectorColorGradientHorizontal = true;
 	mSelectedColor = 0;
-	mColors[0] = 0x0000FFFF;
-	mColors[1] = 0x00FF00FF;
+	mColors[0] = 0xCFCFCFCF;		// 일반
+	mColors[1] = 0xFFFF00FF;		// 폴더
+	mColors[2] = 0xFFBB00FF;		// 즐거찾기
+	mColors[3] = 0x00FF00FF;		// 한글
+	mColors[4] = 0x00FF00FF;		// 성인
 }
 
 template <typename T>

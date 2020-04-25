@@ -7,6 +7,8 @@
 #include "Settings.h"
 #include "SystemData.h"
 
+using namespace std;
+ 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
 {
@@ -39,6 +41,7 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 	ISimpleGameListView::onFileChanged(file, change);
 }
 
+
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
@@ -54,38 +57,61 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 		if (!showFavoriteIcon)
 			favoritesFirst = false;
 
-
+		// 0 : 일반
+		// 1 : 폴더
+		// 2 : 즐겨찾기
+		// 3 : 한글
+		// 4 : 성인
+		std::string korea[] = {"한글", "한국", "korean", "kor"};
+				
+		// 폴더를 최상단에 표시
 		if (folderFirst)
 		{
 			for (auto it = files.cbegin(); it != files.cend(); it++)
 			{
 				if ((*it)->getType() == FOLDER)
-					mList.add("#" + (*it)->getName(), *it, true);
+					mList.add("#" + (*it)->getName(), *it, 1);
 				else
 					continue;
 			}
 		}
 		
-
+		// 즐겨찾기를 최상단에 표시
 		if (favoritesFirst)
 		{
 			for (auto it = files.cbegin(); it != files.cend(); it++)
 			{
+				std::string filename = Utils::FileSystem::getFileName((*it)->getName());
+		
 				if (!(*it)->getFavorite())
 					continue;
 				
 				if (showFavoriteIcon)
-					mList.add("★" + (*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				{
+					for(int i=0; i<4; i++)
+					{
+						if( filename.find(korea[i]) != string::npos )
+						{
+							mList.add("★" + (*it)->getName(), *it, 3);
+							break;
+						}
+						if( i == 3)
+							mList.add("★" + (*it)->getName(), *it, 2);
+					}
+
+					
+				}
 				else if ((*it)->getType() == FOLDER)
-					continue; // mList.add(" #" + (*it)->getName(), *it, true);
+					continue;
 				else
-					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));				
+					mList.add((*it)->getName(), *it, 0);				
 			}
 		}
 
+		// 일반 리스트 표시
 		for(auto it = files.cbegin(); it != files.cend(); it++)
 		{
-
+			std::string filename = Utils::FileSystem::getFileName((*it)->getName());
 			if ((*it)->getFavorite())
 			{
 				if (favoritesFirst)
@@ -93,7 +119,16 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 				
 				if (showFavoriteIcon)
 				{
-					mList.add("★" + (*it)->getName(), *it, ((*it)->getType() == FOLDER));
+					for(int i=0; i<4; i++)
+					{
+						if( filename.find(korea[i]) != string::npos )
+						{
+							mList.add("★" + (*it)->getName(), *it, 3);
+							break;
+						}
+						if( i == 3)
+							mList.add("★" + (*it)->getName(), *it, 2);
+					}
 					continue;
 				}
 			}
@@ -101,7 +136,18 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 			if ((*it)->getType() == FOLDER)
 				continue; //mList.add(" #" + (*it)->getName(), *it, true);
 			else
-				mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));			
+			{
+				for(int i=0; i<4; i++)
+				{
+					if( filename.find(korea[i]) != string::npos )
+					{
+						mList.add((*it)->getName(), *it, 3);
+						break;
+					}
+					if( i == 3)
+						mList.add((*it)->getName(), *it, 0);
+				}
+			}
 		}
 	}
 	else
