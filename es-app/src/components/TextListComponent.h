@@ -315,8 +315,8 @@ void TextListComponent<T>::update(int deltaTime)
 			// loop
 			// pixels per second ( based on nes-mini font at 1920x1080 to produce a speed of 200 )
 			//const float speed        = mFont->sizeText("ABCDEFGHIJKLMNOPQRSTUVWXYZ").x() * 0.500f;
-			const float speed        = 150;
-			const float delay        = 500;
+			const float speed        = 130;
+			const float delay        = 1000;
 			const float scrollLength = textLength;
 			const float returnLength = speed * 1.5f;
 			const float scrollTime   = (scrollLength * 1000) / speed;
