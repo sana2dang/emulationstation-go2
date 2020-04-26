@@ -131,9 +131,9 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mSelectedColor = 0;
 	mColors[0] = 0xCFCFCFCF;		// 일반
 	mColors[1] = 0xFFFF00FF;		// 폴더
-	mColors[2] = 0xFFBB00FF;		// 즐거찾기
+	mColors[2] = 0x489CFFFF;		// 즐겨찾기
 	mColors[3] = 0x00FF00FF;		// 한글
-	mColors[4] = 0x00FF00FF;		// 성인
+	mColors[4] = 0xFF4848FF;		// 성인
 }
 
 template <typename T>
