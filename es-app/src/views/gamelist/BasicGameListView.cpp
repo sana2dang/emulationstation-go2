@@ -62,7 +62,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 		// 2 : 즐겨찾기
 		// 3 : 한글
 		// 4 : 성인
-		std::string korea[] = {"한글", "한국", "korean", "kor"};
+		std::string korea[] = {"한글", "한국", "korean"};
 				
 		// 폴더를 최상단에 표시
 		if (folderFirst)
@@ -88,14 +88,14 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 				
 				if (showFavoriteIcon)
 				{
-					for(int i=0; i<4; i++)
+					for(int i=0; i<3; i++)
 					{
 						if( filename.find(korea[i]) != string::npos )
 						{
 							mList.add("★" + (*it)->getName(), *it, 3);
 							break;
 						}
-						if( i == 3)
+						if( i == 2)
 							mList.add("★" + (*it)->getName(), *it, 2);
 					}
 
@@ -119,14 +119,14 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 				
 				if (showFavoriteIcon)
 				{
-					for(int i=0; i<4; i++)
+					for(int i=0; i<3; i++)
 					{
 						if( filename.find(korea[i]) != string::npos )
 						{
 							mList.add("★" + (*it)->getName(), *it, 3);
 							break;
 						}
-						if( i == 3)
+						if( i == 2)
 							mList.add("★" + (*it)->getName(), *it, 2);
 					}
 					continue;
@@ -137,14 +137,14 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 				continue; //mList.add(" #" + (*it)->getName(), *it, true);
 			else
 			{
-				for(int i=0; i<4; i++)
+				for(int i=0; i<3; i++)
 				{
 					if( filename.find(korea[i]) != string::npos )
 					{
 						mList.add((*it)->getName(), *it, 3);
 						break;
 					}
-					if( i == 3)
+					if( i == 2)
 						mList.add((*it)->getName(), *it, 0);
 				}
 			}
