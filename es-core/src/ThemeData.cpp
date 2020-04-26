@@ -8,6 +8,7 @@
 #include "Settings.h"
 #include <pugixml/src/pugixml.hpp>
 #include <algorithm>
+#include "utils/StringUtil.h"
 
 std::vector<std::string> ThemeData::sSupportedViews { { "system" }, { "basic" }, { "detailed" }, { "grid" }, { "video" } };
 std::vector<std::string> ThemeData::sSupportedFeatures { { "video" }, { "carousel" }, { "z-index" }, { "visible" } };
@@ -32,8 +33,17 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
 		{ "margin", NORMALIZED_PAIR },
+		{ "padding", NORMALIZED_RECT },
+		{ "autoLayout", NORMALIZED_PAIR },
+		{ "autoLayoutSelectedZoom", FLOAT },
 		{ "gameImage", PATH },
 		{ "folderImage", PATH },
+		{ "imageSource", STRING },
+		{ "scrollDirection", STRING },
+		{ "centerSelection", BOOLEAN },
+		{ "scrollLoop", BOOLEAN },
+		{ "animate", BOOLEAN },
+		{ "zIndex", FLOAT },
 		{ "scrollDirection", STRING } } },
 	{ "gridtile", {
 		{ "size", NORMALIZED_PAIR },
@@ -75,6 +85,8 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "selectedColor", COLOR },
 		{ "primaryColor", COLOR },
 		{ "secondaryColor", COLOR },
+		{ "favoriteColor", COLOR },
+		{ "koreaColor", COLOR },	
 		{ "fontPath", PATH },
 		{ "fontSize", FLOAT },
 		{ "scrollSound", PATH },
@@ -410,6 +422,25 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 
 		switch(typeIt->second)
 		{
+		case NORMALIZED_RECT:
+		{
+			Vector4f val;
+
+			auto splits = Utils::String::delimitedStringToVector(str, " ");
+			if (splits.size() == 2)
+			{
+				val = Vector4f((float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()),
+					(float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()));
+			}
+			else if (splits.size() == 4)
+			{
+				val = Vector4f((float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()),
+					(float)atof(splits.at(2).c_str()), (float)atof(splits.at(3).c_str()));
+			}
+
+			element.properties[node.name()] = val;
+			break;
+		}
 		case NORMALIZED_PAIR:
 		{
 			size_t divider = str.find(' ');

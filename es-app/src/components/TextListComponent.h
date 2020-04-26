@@ -131,7 +131,7 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mSelectedColor = 0;
 	mColors[0] = 0xCFCFCFCF;		// 일반
 	mColors[1] = 0xFFFF00FF;		// 폴더
-	mColors[2] = 0x489CFFFF;		// 즐겨찾기
+	mColors[2] = 0x489CFFFF;		// 즐거찾기
 	mColors[3] = 0x00FF00FF;		// 한글
 	mColors[4] = 0xFF4848FF;		// 성인
 }
@@ -388,6 +388,11 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 			setColor(0, elem->get<unsigned int>("primaryColor"));
 		if(elem->has("secondaryColor"))
 			setColor(1, elem->get<unsigned int>("secondaryColor"));
+		// custom color
+		if(elem->has("favoriteColor"))
+			setColor(2, elem->get<unsigned int>("favoriteColor"));
+		if(elem->has("koreaColor"))
+			setColor(3, elem->get<unsigned int>("koreaColor"));
 	}
 
 	setFont(Font::getFromTheme(elem, properties, mFont));
