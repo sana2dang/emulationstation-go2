@@ -112,7 +112,7 @@ void GuiMenu::openOga9PSettings()
 
 	// 빌드버전
 	row.elements.clear();
-	char version[100] = "------ OGA-9P-V3 Edition build 4.0 ------";
+	char version[100] = "------ OGA-9P Edition build 4.0 ------";
 	row.addElement(std::make_shared<TextComponent>(window, version, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	s->addRow(row);
 
