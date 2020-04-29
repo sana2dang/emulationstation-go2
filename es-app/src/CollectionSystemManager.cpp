@@ -13,6 +13,7 @@
 #include "ThemeData.h"
 #include <pugixml/src/pugixml.hpp>
 #include <fstream>
+#include "Gamelist.h"
 
 std::string myCollectionsName = "collections";
 
@@ -534,7 +535,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 				ViewController::get()->onFileChanged(file, FILE_METADATA_CHANGED);
 				ViewController::get()->getGameListView(systemViewToUpdate)->onFileChanged(file, FILE_METADATA_CHANGED);
 			}
-			
+			updateGamelist(systemViewToUpdate);
 		}
 		if (adding)
 		{
