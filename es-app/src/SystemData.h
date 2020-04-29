@@ -71,6 +71,7 @@ public:
 	void loadTheme();
 
 	FileFilterIndex* getIndex() { return mFilterIndex; };
+	void onMetaDataSavePoint();
 
 private:
 	static SystemData* loadSystem(pugi::xml_node system);
@@ -86,7 +87,8 @@ private:
 	void populateFolder(FileData* folder);
 	void indexAllGameFilters(const FileData* folder);
 	void setIsGameSystemStatus();
-	
+	void writeMetaData();
+
 	FileFilterIndex* mFilterIndex;
 
 	FileData* mRootFolder;

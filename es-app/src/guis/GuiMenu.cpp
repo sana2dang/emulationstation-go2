@@ -19,13 +19,14 @@
 #include <SDL_events.h>
 #include <algorithm>
 #include "platform.h"
+#include "Gamelist.h"
 
 #include <go2/display.h>
 
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "메인 메뉴"), mVersion(window)
 {
-	addEntry("OGA 상태정보 및 ", 0x777777FF, true, [this] { openOga9PSettings(); });
+	addEntry("OGA 상태정보 및 설정", 0x777777FF, true, [this] { openOga9PSettings(); });
 
 	addEntry("화면 설정", 0x777777FF, true, [this] { openDisplaySettings(); });
 
@@ -76,7 +77,7 @@ void GuiMenu::getInfo(const char *cmdline, char info_buff[], int size)
 void GuiMenu::openOga9PSettings()
 {
 	// OGA-9P Settings
-	auto s = new GuiSettings(mWindow, "OGA 상태 정보 및 ");
+	auto s = new GuiSettings(mWindow, "OGA 상태 정보 및 설정");
 	Window* window = mWindow;
 	ComponentListRow row;
 
@@ -486,10 +487,25 @@ void GuiMenu::openOtherSettings()
 	});
 
 	// gamelists
+	/*
 	auto save_gamelists = std::make_shared<SwitchComponent>(mWindow);
 	save_gamelists->setState(Settings::getInstance()->getBool("SaveGamelistsOnExit"));
 	s->addWithLabel("종료시 메타데이터 저장", save_gamelists);
 	s->addSaveFunc([save_gamelists] { Settings::getInstance()->setBool("SaveGamelistsOnExit", save_gamelists->getState()); });
+	*/
+	auto gamelistsSaveMode = std::make_shared< OptionListComponent<std::string> >(mWindow, "메타데이터 저장", false);
+	std::vector<std::string> saveModes;
+	saveModes.push_back("on exit");
+	saveModes.push_back("always");
+	saveModes.push_back("never");
+
+	for(auto it = saveModes.cbegin(); it != saveModes.cend(); it++)
+		gamelistsSaveMode->add(*it, *it, Settings::getInstance()->getString("SaveGamelistsMode") == *it);
+	s->addWithLabel("메타데이터 저장", gamelistsSaveMode);
+	s->addSaveFunc([gamelistsSaveMode] {
+		Settings::getInstance()->setString("SaveGamelistsMode", gamelistsSaveMode->getSelected());
+	});
+
 
 	auto parse_gamelists = std::make_shared<SwitchComponent>(mWindow);
 	parse_gamelists->setState(Settings::getInstance()->getBool("ParseGamelistOnly"));

@@ -13,7 +13,6 @@
 #include "ThemeData.h"
 #include <pugixml/src/pugixml.hpp>
 #include <fstream>
-#include "Gamelist.h"
 
 std::string myCollectionsName = "collections";
 
@@ -451,6 +450,8 @@ void CollectionSystemManager::exitEditMode()
 	mWindow->setInfoPopup(s);
 	mIsEditingCustom = false;
 	mEditingCollection = "즐겨찾기";
+	
+	mEditingCollectionSystemData->system->onMetaDataSavePoint();
 }
 
 // adds or removes a game from a specific collection
@@ -508,6 +509,8 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 				}
 			}
 			updateCollectionFolderMetadata(sysData);
+			
+
 		}
 		else
 		{
@@ -526,6 +529,9 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 				md->set("favorite", "false");
 			}
 			file->getSourceFileData()->getSystem()->getIndex()->addToIndex(file);
+
+			file->getSourceFileData()->getSystem()->onMetaDataSavePoint();
+
 			refreshCollectionSystems(file->getSourceFileData());
 
 			
@@ -535,7 +541,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 				ViewController::get()->onFileChanged(file, FILE_METADATA_CHANGED);
 				ViewController::get()->getGameListView(systemViewToUpdate)->onFileChanged(file, FILE_METADATA_CHANGED);
 			}
-			updateGamelist(systemViewToUpdate);
+			
 		}
 		if (adding)
 		{
