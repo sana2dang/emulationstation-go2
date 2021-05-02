@@ -115,9 +115,17 @@ namespace Renderer
 		
 		go2_display_t* display = getDisplay();
 		int w, h;
-		w = go2_display_height_get(display);
-		h = go2_display_width_get(display);
-
+		
+		if (go2_display_width_get(display) == 640 && go2_display_height_get(display)==480)
+		{
+			h = go2_display_height_get(display);
+			w = go2_display_width_get(display);			
+		}
+		else{
+			w = go2_display_height_get(display);
+			h = go2_display_width_get(display);
+		}
+		
 		titlebarSurface = go2_surface_create(display, w/*480*/, 16, DRM_FORMAT_RGB565);
 
 		context = go2_context_create(display, w/*480*/, h/*320*/, &attr);
@@ -305,8 +313,16 @@ namespace Renderer
 		go2_display_t* display = getDisplay();
 
 		int w, h;
-		w = go2_display_height_get(display);
-		h = go2_display_width_get(display);
+		if (go2_display_width_get(display) == 640 && go2_display_height_get(display)==480)
+		{
+			h = go2_display_height_get(display);
+			w = go2_display_width_get(display);			
+		}
+		else{
+			w = go2_display_height_get(display);
+			h = go2_display_width_get(display);
+		}
+		
 		//SDL_GL_SwapWindow(getSDLWindow());
 
 		if (context)
@@ -800,11 +816,18 @@ namespace Renderer
 				g_screenshot_requested = false;
 			}
 
-			go2_presenter_post(presenter,
-						surface,
-						0, 0, w, h, /*480, 320,*/
-						0, 0, h, w, /*320, 480,*/
-						GO2_ROTATION_DEGREES_270);
+			if (w==640 && h==480)
+				go2_presenter_post(presenter,
+							surface,
+							0, 0, w, h, 
+							0, 0, w, h,
+							GO2_ROTATION_DEGREES_0);				
+			else
+				go2_presenter_post(presenter,
+							surface,
+							0, 0, w, h, /*480, 320,*/
+							0, 0, h, w, /*320, 480,*/
+							GO2_ROTATION_DEGREES_270);
 			go2_context_surface_unlock(context, surface);
 		}
 

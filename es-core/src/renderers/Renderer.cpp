@@ -102,8 +102,15 @@ namespace Renderer
 
 		display = go2_display_create();
 		int w, h;
-		w = go2_display_height_get(display);
-		h = go2_display_width_get(display);
+		if (go2_display_width_get(display) == 640 && go2_display_height_get(display)==480)
+		{
+			h = go2_display_height_get(display);
+			w = go2_display_width_get(display);			
+		}
+		else{
+			w = go2_display_height_get(display);
+			h = go2_display_width_get(display);
+		}
 
 		windowWidth = w;/*480;*/
 		windowHeight = h;/*320;*/
